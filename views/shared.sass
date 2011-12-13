@@ -1,0 +1,73 @@
+body
+  margin: 0
+  padding: 0
+  font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, sans-serif
+a
+  text-decoration: none
+  color: #336699
+
+#menu
+  position: absolute
+  z-index: 999
+  width: 250px
+  padding: 0
+  margin: 0
+  list-style-type: none
+  li
+    overflow: hidden
+    width: 310px
+    font-size: 250%
+    margin: 10px 0
+    a
+      display: block
+      float: left
+      color: #ffffff
+      padding: 0.5em 0 0.5em 0.5em
+      background-color: #336699
+      width: 186px
+    span.arrow
+      display: block
+      float: left
+      width: 0
+      height: 0
+      border: 45px solid transparent
+      border-color: transparent transparent transparent #336699
+
+#container
+  width: 804px
+  margin-left: 220px
+
+#results
+  display: block
+  height: 468px
+  overflow-y: scroll
+  -webkit-overflow-scrolling: touch
+  margin: 0 0 0 20px
+  padding: 0
+  list-style-type: none
+  li
+    padding: 10px 0 14px 20px
+    border-bottom: 1px solid #cccccc
+    &:last-child
+      border-bottom: none
+    &.closed
+      height: 60px
+    &.open
+      min-height: 60px
+      background-color: #ffffcc
+    h2
+      font-size: 120%
+      font-weight: normal
+      margin: 0
+      padding: 0
+    p.summary
+      margin: 0.2em 0
+      padding: 0
+      font-size: 90%
+    span.label
+      font-weight: bold
+      color: #666666
+      margin-right: 0.5em
+
+#map
+  height: 300px

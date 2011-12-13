@@ -1,0 +1,55 @@
+<html>
+<head>
+  <title>Whatever</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
+  <link type="text/css" rel="stylesheet" media="all" href="/shared.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA_3QHUb0m7xaAtwfPfigwhaG37JsJv42c&sensor=false"></script>
+
+</head>
+<body style="margin: 0; padding: 0" onload="initialize();">
+  <div style="width: 320px; float: left;">
+    <ul>
+      <li>Test</li>
+    </ul>
+  </div>
+  <div style="width: 704px; float: left;">
+    <div id="map" style="height:300px"></div>
+    <div style="height:468px; overflow-y: scroll; -webkit-overflow-scrolling: touch;">
+      <p>Jean shorts fugiat carles, freegan cliche eiusmod artisan lomo blog art party incididunt. Nihil marfa salvia, freegan laborum tempor cred gluten-free. Iphone sint single-origin coffee dreamcatcher. Chambray wayfarers duis, scenester 3 wolf moon high life photo booth labore gluten-free seitan tempor lo-fi. Readymade bicycle rights portland brooklyn terry richardson. Readymade wolf brunch ea irure. Incididunt nulla sunt, skateboard leggings letterpress keytar american apparel laboris anim.</p>
+      <p>Tattooed banksy excepteur mixtape consectetur messenger bag, ullamco consequat iphone locavore commodo qui bicycle rights minim. Est brooklyn retro skateboard four loko trust fund minim, irony tattooed put a bird on it. Leggings DIY et, shoreditch sustainable etsy duis aliquip carles do in fixie labore. Tattooed gluten-free lo-fi, single-origin coffee letterpress minim skateboard in butcher aesthetic. Fixie american apparel id shoreditch eu. Farm-to-table letterpress cardigan bicycle rights, mixtape sustainable pariatur hoodie thundercats non fugiat ullamco beard tempor. Gentrify adipisicing id craft beer, iphone vice sapiente beard biodiesel aliqua tumblr echo park exercitation.</p>
+      <p>Nulla eu messenger bag shoreditch, retro id chambray. Mlkshk laboris mixtape butcher, veniam sustainable reprehenderit accusamus freegan wolf officia deserunt commodo dolore. Wes anderson retro fixie iphone wolf freegan. Bicycle rights lo-fi four loko, placeat quis brunch locavore dreamcatcher wes anderson. Culpa terry richardson locavore, banh mi voluptate butcher keytar. Ex tattooed odio Austin. Salvia stumptown voluptate DIY, brunch tattooed next level cupidatat aute cliche leggings laboris.</p
+      <p>Stumptown culpa incididunt non. Nisi lo-fi master cleanse echo park aliquip cardigan voluptate, nesciunt dreamcatcher chambray reprehenderit stumptown. Etsy nulla dolor, salvia leggings VHS ex you probably haven't heard of them est sunt cupidatat thundercats. In echo park before they sold out mlkshk, vero aute put a bird on it blog helvetica do. Gentrify eiusmod echo park next level. Ullamco mollit veniam accusamus mcsweeney's helvetica et cred beard put a bird on it, laborum banh mi non butcher. Fixie delectus accusamus, shoreditch sed aliquip eiusmod irony culpa consectetur biodiesel in id sunt portland.</p>
+      <p>Vice biodiesel chambray beard wolf, organic mlkshk yr pitchfork gentrify put a bird on it DIY viral. Retro farm-to-table before they sold out fanny pack, gluten-free irony shoreditch you probably haven't heard of them iphone fap 8-bit. Yr craft beer photo booth synth raw denim hoodie. Synth vegan whatever, pitchfork bicycle rights trust fund mcsweeney's keytar mlkshk food truck butcher VHS Austin raw denim. Biodiesel banksy photo booth ethical, beard single-origin coffee marfa bicycle rights portland salvia fanny pack carles gentrify. You probably haven't heard of them VHS hoodie, gentrify put a bird on it trust fund cardigan brunch chambray shoreditch american apparel artisan sartorial. Thundercats lo-fi readymade bicycle rights.</p>
+      <p>Wolf hoodie iphone master cleanse tofu. Gluten-free quinoa trust fund sustainable cred brunch. Locavore freegan thundercats gluten-free whatever keffiyeh. Keytar 3 wolf moon farm-to-table trust fund mixtape. Shoreditch leggings ethical, jean shorts blog wes anderson gentrify artisan chambray carles readymade wayfarers next level Austin. Leggings tattooed Austin fap messenger bag, squid jean shorts vinyl next level organic iphone freegan artisan shoreditch 8-bit. Squid brooklyn terry richardson viral, mcsweeney's retro lomo twee craft beer fixie art party.</p>
+      <p>Wes anderson raw denim keytar twee, put a bird on it sartorial shoreditch single-origin coffee williamsburg art party. 8-bit art party freegan helvetica quinoa twee, ethical cred williamsburg blog carles. Keffiyeh twee seitan beard. 3 wolf moon cliche brunch VHS food truck banh mi retro. Quinoa american apparel sustainable fap, PBR readymade thundercats scenester VHS +1 marfa terry richardson. Stumptown gentrify before they sold out trust fund cliche, locavore ethical pitchfork whatever fap synth mcsweeney's keffiyeh wayfarers. Gluten-free art party wes anderson cred biodiesel tofu ethical PBR.</p>
+      <p>Banksy master cleanse biodiesel squid tattooed chambray thundercats, aesthetic yr +1 wes anderson leggings single-origin coffee whatever 8-bit. Cred hoodie scenester cosby sweater. Portland photo booth before they sold out echo park cardigan. Butcher aesthetic pitchfork, four loko blog Austin freegan williamsburg art party fixie you probably haven't heard of them next level lo-fi vice etsy. Banh mi brunch shoreditch etsy mustache, squid gluten-free sartorial blog letterpress vinyl aesthetic lo-fi. Master cleanse scenester stumptown 3 wolf moon, food truck put a bird on it lomo blog ethical DIY. Gentrify echo park irony, quinoa blog portland american apparel food truck letterpress four loko bicycle rights before they sold out raw denim mustache shoreditch.</p>
+    </div>
+  </div>
+    <script type="text/javascript">
+    function initialize() {
+      var latlng = new google.maps.LatLng(32.901894, -117.207664);
+      var eventLocation = new google.maps.LatLng(32.7517222, -116.0417713);
+      var myOptions = {
+        zoom: 8,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map"),myOptions);
+
+      var marker = new google.maps.Marker({
+        position: eventLocation,
+        map: map,
+        title:"Hello World!"
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        // map.setZoom(8);
+        alert('Clicked a pin');
+      });
+    }
+    // http://maps.google.com/maps?q=10182+Telesis+Ct,+San+Diego,+CA+92121+(work)&hl=en&ll=32.901894,-117.207664&spn=0.205237,0.279121&sll=37.0625,-95.677068&sspn=49.176833,71.455078&vpsrc=6&t=v&hnear=10182+Telesis+Ct,+San+Diego,+California+92121&z=12
+  </script>
+</body>
+</html>

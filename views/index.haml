@@ -1,0 +1,187 @@
+!!! 5
+%html
+  %head
+    %title Register @ Active.com
+    %meta(name="apple-mobile-web-app-capable" content="yes")
+    %meta(name="viewport" content="width=1024, initial-scale=1, user-scalable=no")
+    %link(type="text/css" rel="stylesheet" media="all" href="/shared.css")
+    %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
+    %script(type="text/javascript" src="/scrollto.min.js")
+    %script(type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA_3QHUb0m7xaAtwfPfigwhaG37JsJv42c&sensor=false")
+
+  %body
+    %ul#menu
+      %li
+        %a(href="#running" data-sport="running") Running
+        %span.arrow
+      %li
+        %a(href="#cycling" data-sport="cycling") Cycling
+        %span.arrow
+      %li
+        %a(href="#outdoors" data-sport="hiking") Outdoors
+        %span.arrow
+      %li
+        %a(href="#swimming" data-sport="swimming") Swimming
+        %span.arrow
+      %li
+        %a(href="#baseball" data-sport="baseball") Baseball
+        %span.arrow
+      %li
+        %a(href="#football" data-sport="football") Football
+        %span.arrow
+
+    #container
+      #map
+      %ul#results
+
+    :javascript
+      var markers = [];
+      $(function() {
+        var center = new google.maps.LatLng(32.901894, -117.207664);
+        var options = {
+          zoom: 9,
+          center: center,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"), options);
+        //var markers = [];
+
+        $('#menu a').click(function() {
+          getResultsFor($(this).attr('data-sport'), 92121);
+        });
+
+        $('#results li').live('click', function() {
+          var id = parseInt($(this).attr('id').split('_')[1]);
+          rowClicked(id);
+        }).find('a').live('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          $(this).parents('li').click();
+        });
+
+        var rowClicked = function(id) {
+          var $this = $('#result_'+id);
+
+          clearBouncing();    // stop all markers from bouncing
+          closeAllRows();     // collapse all other rows
+
+          $this.find('.short').hide();
+          $this.find('.long').show();
+          $this.removeClass('closed').addClass('open');
+          $('#results').scrollTo($this, 500);
+
+          // find the marker for this result
+          for(i in markers) {
+            if (markers[i] && markers[i].data == id) {
+              markers[i].setAnimation(google.maps.Animation.BOUNCE);
+              map.panTo(markers[i].position);
+              break;
+            }
+          }
+        };
+
+        var clearBouncing = function() {
+          for(i in markers) {
+            var marker = markers[i]
+            if (marker) {
+              marker.setAnimation(null);
+            }
+          }
+        }
+
+        var removeAllMarkers = function() {
+          while(markers.length > 0) {
+            var marker = markers.pop();
+            if (marker) {
+              marker.setMap(null);
+            }
+          }
+        }
+
+        var closeAllRows = function() {
+          $('#results li.open').each(function() {
+            $(this).removeClass('open').addClass('closed').find('.short').show().end().find('.long').hide();
+          });
+        } 
+
+
+        var getResultsFor = function(sport, zip) {
+          removeAllMarkers();
+          $('#results').html('');
+
+          $.get('/search', {channel:sport, zip:zip, num:10}, function(data) {
+            for(var i=0;i<data.length;i++) {
+              (function() {
+                var id = 'result_' + i;
+                var row = $('<li>').attr('id', id).attr('data-asset_id', data[i].asset_id).addClass('closed').html($('<h2>').html($('<a>').attr('href','#').html(data[i].name))).hide();
+                $('#results').append(row);
+                row.fadeIn(500);
+
+                // get details for each row
+                $.get('/detail', {asset_id:data[i].asset_id}, function(result) {
+                  var asset = result._results[0];
+
+                  if (asset) {
+                    // summary
+                    if (asset.meta && asset.meta.summary) {
+                      var short = $('<p>').attr('class', 'summary short').text(asset.meta.summary.slice(0,100)+'...').hide();
+                      var long = $('<p>').attr('class', 'summary long').text(asset.meta.summary).hide();
+                      row.append(short).append(long);
+                      short.fadeIn(500);
+                    }
+
+                    // when
+                    if (asset.meta && asset.meta.startDate) {
+                      var label = $('<span>').attr('class', 'label').text('When:').hide();
+                      var value = $('<time>').attr('class', 'start_date').attr('datetime', asset.meta.startDate).html(asset.meta.startDate).hide();
+                      row.append(label).append(value);
+                      label.fadeIn(500);
+                      value.fadeIn(500);
+                    }
+
+                    // where
+                    if (asset.meta && asset.meta.location) {
+                      var label = $('<span>').attr('class', 'label').text('Where:').hide();
+                      var value = $('<span>').attr('class', 'location').html(asset.meta.location).hide()
+                      row.append(label).append(value);
+                      label.fadeIn(500);
+                      value.fadeIn(500);
+                    }
+
+                    // drop a pin
+                    if (asset.meta && asset.meta.latitude && asset.meta.longitude) {
+                      var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat(asset.meta.latitude), parseFloat(asset.meta.longitude)),
+                        map: map,
+                        animation: google.maps.Animation.DROP,
+                        title:asset.title,
+                        data:parseInt(id.split('_')[1])
+                      });
+
+                      markers.push(marker);
+
+                      google.maps.event.addListener(marker, 'click', function() {
+                        console.info("Inside marker listener: " + asset.title);
+                        rowClicked(marker.data);
+                      });
+
+                    } else {
+                      markers.push(null);
+                    }
+                  } else {
+                    // set a null pin
+                    markers.push(null);
+                  }
+                });
+              }());
+            }
+          });
+        };
+
+        // start us up by showing running
+        getResultsFor('running', 92121);
+        
+      });
+
+      // http://maps.google.com/maps?q=10182+Telesis+Ct,+San+Diego,+CA+92121+(work)&hl=en&ll=32.901894,-117.207664&spn=0.205237,0.279121&sll=37.0625,-95.677068&sspn=49.176833,71.455078&vpsrc=6&t=v&hnear=10182+Telesis+Ct,+San+Diego,+California+92121&z=12
+
