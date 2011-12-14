@@ -12,31 +12,27 @@
   %body
     %ul#menu
       %li
-        %a(href="#running" data-sport="running") Running
-        %span.arrow
+        %a.button(href="#running" data-sport="running") Running
       %li
-        %a(href="#cycling" data-sport="cycling") Cycling
-        %span.arrow
+        %a.button(href="#cycling" data-sport="cycling") Cycling
       %li
-        %a(href="#outdoors" data-sport="hiking") Outdoors
-        %span.arrow
+        %a.button(href="#outdoors" data-sport="hiking") Outdoors
       %li
-        %a(href="#swimming" data-sport="swimming") Swimming
-        %span.arrow
+        %a.button(href="#golf" data-sport="golf") Golf
       %li
-        %a(href="#baseball" data-sport="baseball") Baseball
-        %span.arrow
+        %a.button(href="#swimming" data-sport="swimming") Swimming
       %li
-        %a(href="#football" data-sport="football") Football
-        %span.arrow
+        %a.button(href="#baseball" data-sport="baseball") Baseball
+      %li
+        %a.button(href="#football" data-sport="football") Football
 
     #container
       #map
       %ul#results
 
     :javascript
-      var markers = [];
       $(function() {
+        var zip = '92121';
         var center = new google.maps.LatLng(32.901894, -117.207664);
         var options = {
           zoom: 9,
@@ -44,12 +40,14 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map"), options);
-        //var markers = [];
+        var markers = [];
 
+        // menu items
         $('#menu a').click(function() {
-          getResultsFor($(this).attr('data-sport'), 92121);
+          getResultsFor($(this).attr('data-sport'), zip);
         });
 
+        // clicking a row in results
         $('#results li').live('click', function() {
           var id = parseInt($(this).attr('id').split('_')[1]);
           rowClicked(id);
@@ -59,23 +57,39 @@
           $(this).parents('li').click();
         });
 
+        // clicking one of the buttons in the results list
+        $('#results a.online').live('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          location.href = $(this).parents('li').attr('data-url');
+        });
+
+        $('#results a.print').live('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          $(this).parents('li').find('.email').fadeIn(500).find('input').focus();
+        });
+
         var rowClicked = function(id) {
           var $this = $('#result_'+id);
 
-          clearBouncing();    // stop all markers from bouncing
-          closeAllRows();     // collapse all other rows
+          if ($this.hasClass('closed')) {
+            clearBouncing();    // stop all markers from bouncing
+            closeAllRows();     // collapse all other rows
 
-          $this.find('.short').hide();
-          $this.find('.long').show();
-          $this.removeClass('closed').addClass('open');
-          $('#results').scrollTo($this, 500);
+            $this.find('.short').hide();
+            $this.find('.long').fadeIn();
+            $this.removeClass('closed').addClass('open');
+            $this.find('.buttons').fadeIn();
+            $('#results').scrollTo($this, 500);
 
-          // find the marker for this result
-          for(i in markers) {
-            if (markers[i] && markers[i].data == id) {
-              markers[i].setAnimation(google.maps.Animation.BOUNCE);
-              map.panTo(markers[i].position);
-              break;
+            // find the marker for this result
+            for(i in markers) {
+              if (markers[i] && markers[i].data == id) {
+                markers[i].setAnimation(google.maps.Animation.BOUNCE);
+                map.panTo(markers[i].position);
+                break;
+              }
             }
           }
         };
@@ -100,7 +114,7 @@
 
         var closeAllRows = function() {
           $('#results li.open').each(function() {
-            $(this).removeClass('open').addClass('closed').find('.short').show().end().find('.long').hide();
+            $(this).removeClass('open').addClass('closed').find('.short').show().end().find('.long').hide().end().find('.buttons').hide().end().find('.email').hide();
           });
         } 
 
@@ -113,7 +127,7 @@
             for(var i=0;i<data.length;i++) {
               (function() {
                 var id = 'result_' + i;
-                var row = $('<li>').attr('id', id).attr('data-asset_id', data[i].asset_id).addClass('closed').html($('<h2>').html($('<a>').attr('href','#').html(data[i].name))).hide();
+                var row = $('<li>').attr('id', id).attr('data-asset_id', data[i].asset_id).attr('data-url', data[i].url).addClass('closed').html($('<h2>').html($('<a>').attr('href','#').html(data[i].name))).hide();
                 $('#results').append(row);
                 row.fadeIn(500);
 
@@ -132,21 +146,35 @@
 
                     // when
                     if (asset.meta && asset.meta.startDate) {
-                      var label = $('<span>').attr('class', 'label').text('When:').hide();
-                      var value = $('<time>').attr('class', 'start_date').attr('datetime', asset.meta.startDate).html(asset.meta.startDate).hide();
-                      row.append(label).append(value);
-                      label.fadeIn(500);
-                      value.fadeIn(500);
+                      var label = $('<span>').attr('class', 'label').text('When:');
+                      var value = $('<time>').attr('class', 'start_date').attr('datetime', asset.meta.startDate).html(asset.meta.startDate);
+                      var container = $('<span>').attr('class', 'start_date').append(label).append(value).hide();
+                      row.append(container)
+                      container.fadeIn(500);
                     }
 
                     // where
                     if (asset.meta && asset.meta.location) {
-                      var label = $('<span>').attr('class', 'label').text('Where:').hide();
-                      var value = $('<span>').attr('class', 'location').html(asset.meta.location).hide()
-                      row.append(label).append(value);
-                      label.fadeIn(500);
-                      value.fadeIn(500);
+                      var label = $('<span>').attr('class', 'label').text('Where:');
+                      var value = $('<span>').attr('class', 'location').html(asset.meta.location);
+                      var container = $('<span>').attr('class', 'start_date').append(label).append(value).hide();
+                      row.append(container)
+                      container.fadeIn(500);
                     }
+
+                    // reg buttons
+                    var regButton = $('<a>').attr('class', 'button online').attr('href', '#').text('Register on Active.com');
+                    var printButton = $('<a>').attr('class', 'button print').attr('href', '#').text('Print a Receipt and Pay Here');
+                    var container = $('<div>').attr('class', 'buttons').append(regButton).append(printButton).hide();
+                    row.append(container);
+
+                    // email address for printing
+                    var label = $('<label>').text('Email Address');
+                    var input = $('<input>').attr('type','text').attr('name','email_address');
+                    var go = $('<a>').attr('class','button submit').text('Print');
+                    var example = $('<span>').attr('class', 'example').text('Please provide your email address so we can email you the rest of your registration details.');
+                    var container = $('<div>').attr('class', 'email').append(label).append(input).append(go).append(example).hide();
+                    row.append(container);
 
                     // drop a pin
                     if (asset.meta && asset.meta.latitude && asset.meta.longitude) {
@@ -161,7 +189,6 @@
                       markers.push(marker);
 
                       google.maps.event.addListener(marker, 'click', function() {
-                        console.info("Inside marker listener: " + asset.title);
                         rowClicked(marker.data);
                       });
 
@@ -179,7 +206,7 @@
         };
 
         // start us up by showing running
-        getResultsFor('running', 92121);
+        getResultsFor('running', zip);
         
       });
 

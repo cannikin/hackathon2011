@@ -2,9 +2,26 @@ body
   margin: 0
   padding: 0
   font-family: 'Helvetica Neue', HelveticaNeue, Helvetica, sans-serif
+  color: #333333
 a
   text-decoration: none
-  color: #336699
+  color: #0069D6
+
+a.button
+  -webkit-border-radius: 6px
+  margin-right: 10px
+  border: 1px solid #cccccc
+  background-color: #0064CD
+  background-repeat: repeat-x
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd))
+  background-image: -webkit-linear-gradient(top, #049cdb, #0064cd)
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
+  border-color: #0064CD #0064CD #003F81
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
+  &.online
+    background-color: #57A957
+    border-color: #57A957 #57A957 #3D773D
+    background-image: -webkit-linear-gradient(top, #62c462, #57a957)
 
 #menu
   position: absolute
@@ -15,59 +32,79 @@ a
   list-style-type: none
   li
     overflow: hidden
-    width: 310px
     font-size: 250%
     margin: 10px 0
     a
       display: block
       float: left
       color: #ffffff
-      padding: 0.5em 0 0.5em 0.5em
+      padding: 0.5em
       background-color: #336699
       width: 186px
-    span.arrow
-      display: block
-      float: left
-      width: 0
-      height: 0
-      border: 45px solid transparent
-      border-color: transparent transparent transparent #336699
+      -webkit-border-radius: 0 10px 10px 0
 
 #container
-  width: 804px
-  margin-left: 220px
+  width: 784px
+  margin-left: 240px
 
 #results
   display: block
   height: 468px
   overflow-y: scroll
   -webkit-overflow-scrolling: touch
-  margin: 0 0 0 20px
+  margin: 0
   padding: 0
   list-style-type: none
   li
-    padding: 10px 0 14px 20px
+    padding: 10px 0 14px 10px
     border-bottom: 1px solid #cccccc
+    min-height: 60px
     &:last-child
       border-bottom: none
-    &.closed
-      height: 60px
     &.open
-      min-height: 60px
       background-color: #ffffcc
     h2
-      font-size: 120%
-      font-weight: normal
+      font-size: 140%
+      font-weight: bold
       margin: 0
       padding: 0
     p.summary
       margin: 0.2em 0
       padding: 0
-      font-size: 90%
     span.label
       font-weight: bold
-      color: #666666
+      color: #999999
       margin-right: 0.5em
+    span.start_date, span.location
+      margin-right: 0.5em
+      font-size: 90%
+    .buttons
+      overflow: hidden
+      margin: 6px 0 0
+    a.button
+      background-color: #336699
+      display: block
+      float: left
+      color: #ffffff
+      padding: 0.4em 0.8em
+      font-size: 110%
+    .email
+      margin: 4px 0 0
+      label
+        margin-right: 10px
+        margin-left: 115px
+      span.example
+        display: block
+        font-size: 90%
+        color: #666666
+        margin: 4px 0 0
+      a.button
+        display: inline
+        float: none
+        margin-left: 10px
+    input
+      font-size: 120%
+      width: 245px
 
 #map
   height: 300px
